@@ -31,6 +31,7 @@ class ResidualBlock(nn.Module):
 class SpatialEncoder(nn.Module):
     def __init__(self, in_channels=1, feat_dim=512):
         super().__init__()
+        
         self.conv1 = nn.Conv2d(in_channels, 64, 7, stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.maxpool = nn.MaxPool2d(3, stride=2, padding=1)
@@ -51,10 +52,12 @@ class SpatialEncoder(nn.Module):
     def forward(self, x):
         x = F.relu(self.bn1(self.conv1(x)))
         x = self.maxpool(x)
+        
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
+        
         x = self.avgpool(x)
         x = x.flatten(1)
         return x
@@ -73,6 +76,7 @@ class TemporalAttention(nn.Module):
         
     def forward(self, x, mask=None):
         B, T, C = x.shape
+        
         qkv = self.qkv(x).reshape(B, T, 3, self.num_heads, self.head_dim)
         qkv = qkv.permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[2]
@@ -94,15 +98,22 @@ class TemporalAttention(nn.Module):
 class TemporalEncoder(nn.Module):
     def __init__(self, feat_dim=512, hidden_dim=256, num_layers=2, num_heads=8, dropout=0.2):
         super().__init__()
+        
         self.lstm = nn.LSTM(
-            feat_dim, hidden_dim, num_layers=num_layers,
-            batch_first=True, dropout=dropout if num_layers > 1 else 0,
+            feat_dim, 
+            hidden_dim, 
+            num_layers=num_layers,
+            batch_first=True,
+            dropout=dropout if num_layers > 1 else 0,
             bidirectional=True
         )
+        
         self.proj = nn.Linear(hidden_dim * 2, feat_dim)
         self.attention = TemporalAttention(feat_dim, num_heads=num_heads, dropout=dropout)
+        
         self.ln1 = nn.LayerNorm(feat_dim)
         self.ln2 = nn.LayerNorm(feat_dim)
+        
         self.ff = nn.Sequential(
             nn.Linear(feat_dim, feat_dim * 2),
             nn.GELU(),
@@ -113,6 +124,7 @@ class TemporalEncoder(nn.Module):
         
     def forward(self, x, lengths=None):
         B, T, _ = x.shape
+        
         if lengths is not None:
             x_packed = nn.utils.rnn.pack_padded_sequence(
                 x, lengths.cpu(), batch_first=True, enforce_sorted=False
@@ -132,7 +144,9 @@ class TemporalEncoder(nn.Module):
         attn_out = self.attention(x, mask=mask)
         x = x + attn_out
         x = self.ln2(x)
+        
         x = x + self.ff(x)
+        
         return x, mask
 
 
@@ -148,6 +162,7 @@ class ThermalDeltaModule(nn.Module):
     
     def forward(self, x, lengths=None):
         B, T, C = x.shape
+        
         if lengths is None:
             baseline = x[:, :T//4].mean(dim=1)
             peak = x[:, T//4:3*T//4].max(dim=1)[0]
@@ -168,13 +183,28 @@ class ThermalDeltaModule(nn.Module):
 
 
 class ThermalMaterialClassifier(nn.Module):
-    def __init__(self, in_channels=1, num_classes=3, spatial_dim=512, 
-                 temporal_hidden=256, temporal_layers=2, num_heads=8, dropout=0.2):
+    def __init__(
+        self, 
+        in_channels=1,
+        num_classes=3,
+        spatial_dim=512,
+        temporal_hidden=256,
+        temporal_layers=2,
+        num_heads=8,
+        dropout=0.2
+    ):
         super().__init__()
+        
         self.spatial_encoder = SpatialEncoder(in_channels, spatial_dim)
+        
         self.temporal_encoder = TemporalEncoder(
-            spatial_dim, temporal_hidden, temporal_layers, num_heads, dropout
+            spatial_dim, 
+            temporal_hidden, 
+            temporal_layers, 
+            num_heads,
+            dropout
         )
+        
         self.delta_module = ThermalDeltaModule(spatial_dim)
         
         fusion_dim = spatial_dim + spatial_dim // 2
@@ -186,10 +216,12 @@ class ThermalMaterialClassifier(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout)
         )
+        
         self.classifier = nn.Linear(spatial_dim // 2, num_classes)
         
     def forward(self, x, lengths=None):
         B, T, C, H, W = x.shape
+        
         x_flat = x.view(B * T, C, H, W)
         spatial_feats = self.spatial_encoder(x_flat)
         spatial_feats = spatial_feats.view(B, T, -1)
