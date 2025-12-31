@@ -4,6 +4,7 @@
 [![Python](https://img.shields.io/badge/Python-3.8%2B-yellow)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/Framework-PyTorch%20%7C%20TensorFlow-orange)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+![metal_record_gif](https://github.com/user-attachments/assets/a57b79b3-f434-47c6-9e9d-ff2a64e2bf25)
 
 <br />
 
