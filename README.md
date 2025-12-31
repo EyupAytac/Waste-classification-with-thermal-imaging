@@ -30,16 +30,14 @@
 ### 1. The Physical Setup
 Our approach utilizes "Active Thermography." Unlike standard visual cameras, our system relies on the **thermal retention properties** of different materials (e.g., how fast plastic cools down vs. metal).
 
-![Methodology Diagram](https://placehold.co/800x300/EEE/31343C?text=Figure+2:+Heating+and+Cooling+Cycle+Diagram)
-*Figure 2: The process of heating the object and capturing the thermal decay curve.*
+
 
 ### 2. Network Architecture (CNN-LSTM)
 To capture both the visual shape (Spatial) and the cooling rate (Temporal), we utilize a hybrid Deep Learning architecture:
 * **CNN (Convolutional Neural Network):** Extracts spatial features from individual thermal frames.
 * **LSTM (Long Short-Term Memory):** Analyzes the sequence of frames to understand how the temperature changes over time.
 
-![Network Architecture](https://placehold.co/800x350/EEE/31343C?text=Figure+3:+CNN-LSTM+Network+Architecture)
-*Figure 3: The deep learning pipeline processing thermal image sequences.*
+
 
 ---
 
@@ -49,10 +47,9 @@ The model was evaluated on a custom laboratory-collected dataset containing vari
 
 | Material Class | Precision | Recall | F1-Score |
 | :--- | :---: | :---: | :---: |
-| **Metal** | 0.95 | 0.94 | 0.94 |
-| **Glass** | 0.92 | 0.91 | 0.91 |
-| **Plastic** | 0.89 | 0.90 | 0.89 |
-| **Wood** | 0.96 | 0.97 | 0.96 |
+| **Metal** | 0.95 | 1.00 | 0.98 |
+| **Plastic** | 0.94 | 0.89 | 0.91 |
+| **Carton** | 0.94 | 0.94 | 0.94 |
 | **Average** | **0.93** | **0.93** | **0.93** |
 
 *(Note: These are placeholder metrics. Please update with your actual validation results.)*
