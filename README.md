@@ -63,5 +63,8 @@ git clone [https://github.com/YourUsername/thermal-waste-classification.git](htt
 # Navigate to directory
 cd thermal-waste-classification
 
-# Install dependencies
-pip install -r requirements.txt
+# Start Training
+python train.py #ask full dataset in order to start training
+
+#Start demo
+python predict.py
