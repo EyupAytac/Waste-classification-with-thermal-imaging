@@ -12,9 +12,6 @@
   <b>Eyüp Enes Aytaç</b> &nbsp;&nbsp;&nbsp;&nbsp; <b>Erkani Mert Tosun</b>
   <br />
   <br />
-  <img src="https://placehold.co/800x400/EEE/31343C?text=Figure+1:+System+Setup+(Thermal+Camera+%2B+Heating+Unit)" alt="System Setup" width="800"/>
-  <br />
-  <em>Figure 1: The experimental setup consisting of active heating lamps and a FLIR T420 thermal camera.</em>
 </div>
 
 ---
