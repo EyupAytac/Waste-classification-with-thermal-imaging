@@ -3,46 +3,6 @@ import torch.nn.functional as F
 import cv2
 import numpy as np
 import os
-import pandas as pd  # Added for Excel reading
-import sys
-
-# Import your local project files
-import config
-from model import ThermalMaterialClassifier
-
-
-# ---------------------------------------------------------
-# MODEL LOADER
-# ---------------------------------------------------------
-def load_model(model_path, device):
-    print(f"[System] Loading model from {model_path}...")
-    model = ThermalMaterialClassifier(
-        in_channels=1,
-        num_classes=3,
-        spatial_dim=512,
-        temporal_hidden=256,
-        temporal_layers=2,
-        num_heads=8,
-        dropout=0.2
-    ).to(device)
-
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model file not found: {model_path}")
-
-    checkpoint = torch.load(model_path, map_location=device)
-    state_dict = checkpoint['model_state'] if 'model_state' in checkpoint else checkpoint
-    model.load_state_dict(state_dict)
-    model.eval()
-    return model
-
-# ---------------------------------------------------------
-# MAIN PROCESSING LOOP
-# ---------------------------------------------------------
-import torch
-import torch.nn.functional as F
-import cv2
-import numpy as np
-import os
 import pandas as pd
 import sys
 import config
