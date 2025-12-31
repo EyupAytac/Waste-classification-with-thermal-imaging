@@ -50,7 +50,7 @@ The model was evaluated on a custom laboratory-collected dataset containing vari
 | **Metal** | 0.95 | 1.00 | 0.98 |
 | **Plastic** | 0.94 | 0.89 | 0.91 |
 | **Carton** | 0.94 | 0.94 | 0.94 |
-| **Average** | **0.93** | **0.93** | **0.93** |
+
 
 *(Note: These are placeholder metrics. Please update with your actual validation results.)*
 
